@@ -66,6 +66,28 @@ document.addEventListener("DOMContentLoaded", function() {
         finalIconArr: shuffle(iconArr.concat(iconArr)),
     };
 
+    const cont = document.querySelector('.deck-container');
+    function create() {
+        const frag = document.createDocumentFragment();
+        const ul = document.createElement('ul');
+        ul.setAttribute('class', 'deck');
+        frag.appendChild(ul);
+
+        for (let x = 0; x < 16; x++) {
+            const li = document.createElement('li');
+            li.setAttribute('class', 'card');
+            li.setAttribute('data-index', `${containerArray.finalIconArr[x].iconIndex}`);
+            ul.appendChild(li);
+
+            const face = document.createElement('div');
+            face.setAttribute('class', `face fa ${containerArray.finalIconArr[x].iconClass}`);
+            li.appendChild(face);
+        }
+        cont.appendChild(frag);
+    }
+
+    create();
+
 });
 /*
  * set up the event listener for a card. If a card is clicked:
