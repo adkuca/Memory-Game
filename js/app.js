@@ -64,6 +64,8 @@ document.addEventListener("DOMContentLoaded", function() {
     
     let containerArray = {
         finalIconArr: shuffle(iconArr.concat(iconArr)),
+        openCards: [],
+        clickCount: 0,
     };
 
     const cont = document.querySelector('.deck-container');
@@ -88,6 +90,17 @@ document.addEventListener("DOMContentLoaded", function() {
 
     create();
 
+    document.querySelector('.deck-container').addEventListener('click', function(e) {
+
+
+        if (e.target.matches('.card')) {
+            containerArray.clickCount += 1;
+
+            e.target.classList.toggle('open');
+            containerArray.openCards.push(e.target);
+
+        }
+    });
 });
 /*
  * set up the event listener for a card. If a card is clicked:
