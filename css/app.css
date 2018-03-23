@@ -85,6 +85,17 @@ h1 {
     font-size: 5vw;
 }
 
+.face {
+    font-size: 5vw;
+    background-color: tomato;
+    height: 100%;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    backface-visibility: hidden;
+}
+
 /*
  * Styles for the Score Panel
  */
