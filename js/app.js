@@ -28,8 +28,7 @@ document.addEventListener("DOMContentLoaded", function() {
     }
 
     function checkMatch(e) {
-        let indexLast = containerArray.openCards.length - 1;
-        return (e.target.getAttribute('data-index') === containerArray.openCards[indexLast - 1].getAttribute('data-index'));
+        return (containerArray.openCardsLast.getAttribute('data-index') === containerArray.openCardsForelast.getAttribute('data-index'));
     }
 
     let iconArr = [
@@ -69,9 +68,11 @@ document.addEventListener("DOMContentLoaded", function() {
     
     let containerArray = {
         finalIconArr: shuffle(iconArr.concat(iconArr)),
-        openCards: [],
         stepCount: 0,
         clickCount: 0,
+        openCards: [],
+        get openCardsLast() { return this.openCards[this.openCards.length - 1] },
+        get openCardsForelast() { return this.openCards[this.openCards.length - 2] },
     };
 
     const cont = document.querySelector('.deck-container');
