@@ -9,23 +9,64 @@
  *   - loop through each card and create its HTML
  *   - add each card's HTML to the page
  */
+document.addEventListener("DOMContentLoaded", function() {
+
 
 // Shuffle function from http://stackoverflow.com/a/2450976
-function shuffle(array) {
-    var currentIndex = array.length, temporaryValue, randomIndex;
+    function shuffle(array) {
+        let currentIndex = array.length, temporaryValue, randomIndex;
 
-    while (currentIndex !== 0) {
-        randomIndex = Math.floor(Math.random() * currentIndex);
-        currentIndex -= 1;
-        temporaryValue = array[currentIndex];
-        array[currentIndex] = array[randomIndex];
-        array[randomIndex] = temporaryValue;
+        while (currentIndex !== 0) {
+            randomIndex = Math.floor(Math.random() * currentIndex);
+            currentIndex -= 1;
+            temporaryValue = array[currentIndex];
+            array[currentIndex] = array[randomIndex];
+            array[randomIndex] = temporaryValue;
+        }
+
+        return array;
     }
 
-    return array;
-}
+    let iconArr = [
+        {
+            iconIndex: 1,
+            iconClass: "fa-diamond"
+        },
+        {
+            iconIndex: 2,
+            iconClass: "fa-paper-plane-o"
+        },
+        {
+            iconIndex: 3,
+            iconClass: "fa-anchor"
+        },
+        {
+            iconIndex: 4,
+            iconClass: "fa-bolt"
+        },
+        {
+            iconIndex: 5,
+            iconClass: "fa-cube"
+        },
+        {
+            iconIndex: 6,
+            iconClass: "fa-bomb"
+        },
+        {
+            iconIndex: 7,
+            iconClass: "fa-leaf"
+        },
+        {
+            iconIndex: 8,
+            iconClass: "fa-bicycle"
+        }
+    ];
+    
+    let containerArray = {
+        finalIconArr: shuffle(iconArr.concat(iconArr)),
+    };
 
-
+});
 /*
  * set up the event listener for a card. If a card is clicked:
  *  - display the card's symbol (put this functionality in another function that you call from this one)
