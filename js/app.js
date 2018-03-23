@@ -27,18 +27,18 @@ document.addEventListener("DOMContentLoaded", function() {
         return array;
     }
 
-    function checkMatch(e) {
+    function toggleClass(elm1, elm2, classString) {
+        elm1.classList.toggle(classString);
+        elm2.classList.toggle(classString);
+    }
+
+    function checkMatch() {
         return (containerArray.openCardsLast.getAttribute('data-index') === containerArray.openCardsForelast.getAttribute('data-index'));
     }
 
-    function matchCards(openCardsLast, openCardsForelast) {
-        openCardsLast.classList.toggle('match');
-        openCardsForelast.classList.toggle('match');
-    }
-
     function closeCards(openCardsLast, openCardsForelast) {
-        openCardsLast.classList.toggle('open');
-        openCardsForelast.classList.toggle('open');
+        toggleClass(openCardsLast, openCardsForelast, 'open');
+        toggleClass(openCardsLast, openCardsForelast, 'fail');
     }
 
     let iconArr = [
@@ -120,10 +120,11 @@ document.addEventListener("DOMContentLoaded", function() {
             if (containerArray.stepCount === 2) {
                 if (checkMatch(e)) {
                     console.log('MATCHED');
-                    setTimeout(matchCards, 700, containerArray.openCardsLast, containerArray.openCardsForelast);
+                    toggleClass(containerArray.openCardsLast, containerArray.openCardsForelast, 'match');
                 } else {
                     console.log('UNMATCHED');
-                    setTimeout(closeCards, 700, containerArray.openCardsLast, containerArray.openCardsForelast);
+                    toggleClass(containerArray.openCardsLast, containerArray.openCardsForelast, 'fail');
+                    setTimeout(closeCards, 600, containerArray.openCardsLast, containerArray.openCardsForelast);
                 }
                 containerArray.stepCount = 0;
             }
