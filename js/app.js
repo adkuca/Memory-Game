@@ -31,6 +31,16 @@ document.addEventListener("DOMContentLoaded", function() {
         return (containerArray.openCardsLast.getAttribute('data-index') === containerArray.openCardsForelast.getAttribute('data-index'));
     }
 
+    function matchCards(openCardsLast, openCardsForelast) {
+        openCardsLast.classList.toggle('match');
+        openCardsForelast.classList.toggle('match');
+    }
+
+    function closeCards(openCardsLast, openCardsForelast) {
+        openCardsLast.classList.toggle('open');
+        openCardsForelast.classList.toggle('open');
+    }
+
     let iconArr = [
         {
             iconIndex: 1,
@@ -110,8 +120,10 @@ document.addEventListener("DOMContentLoaded", function() {
             if (containerArray.stepCount === 2) {
                 if (checkMatch(e)) {
                     console.log('MATCHED');
+                    setTimeout(matchCards, 700, containerArray.openCardsLast, containerArray.openCardsForelast);
                 } else {
-                    console.log('RESET')
+                    console.log('UNMATCHED');
+                    setTimeout(closeCards, 700, containerArray.openCardsLast, containerArray.openCardsForelast);
                 }
                 containerArray.stepCount = 0;
             }
