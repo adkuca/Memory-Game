@@ -27,6 +27,11 @@ document.addEventListener("DOMContentLoaded", function() {
         return array;
     }
 
+    function checkMatch(e) {
+        let indexLast = containerArray.openCards.length - 1;
+        return (e.target.getAttribute('data-index') === containerArray.openCards[indexLast - 1].getAttribute('data-index'));
+    }
+
     let iconArr = [
         {
             iconIndex: 1,
@@ -65,6 +70,7 @@ document.addEventListener("DOMContentLoaded", function() {
     let containerArray = {
         finalIconArr: shuffle(iconArr.concat(iconArr)),
         openCards: [],
+        stepCount: 0,
         clickCount: 0,
     };
 
@@ -94,11 +100,20 @@ document.addEventListener("DOMContentLoaded", function() {
 
 
         if (e.target.matches('.card')) {
+            containerArray.stepCount += 1;
             containerArray.clickCount += 1;
 
             e.target.classList.toggle('open');
             containerArray.openCards.push(e.target);
 
+            if (containerArray.stepCount === 2) {
+                if (checkMatch(e)) {
+                    console.log('MATCHED');
+                } else {
+                    console.log('RESET')
+                }
+                containerArray.stepCount = 0;
+            }
         }
     });
 });
