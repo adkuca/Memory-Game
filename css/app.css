@@ -56,43 +56,62 @@ h1 {
     position: relative;
     height: 22%;
     width: 22%;
-    background: #2e3d49;
-    color: #ffffff;
     border-radius: 8px;
     cursor: pointer;
     display: flex;
     justify-content: center;
     align-items: center;
-    box-shadow: 5px 2px 20px 0 rgba(46, 61, 73, 0.5);
-    transform: rotateY(-180deg);
     transition: transform 0.5s ease;
     transform-style: preserve-3d;
 }
 
+.card-inner {
+    height: 100%;
+    width: 100%;
+    pointer-events: none;
+    transform-style: preserve-3d;
+    box-shadow: 5px 2px 20px 0 rgba(46, 61, 73, 0.5);
+    border-radius: 8px;
+}
+
+.deck .card-inner::after {
+    content: "";
+    position: absolute;
+    height: 100%;
+    width: 100%;
+    border-radius: 8px;
+    background-color: #2e3d49;
+    backface-visibility: hidden;
+    -webkit-backface-visibility: hidden;
+}
+
 .deck .card.open {
-    transform: rotateY(0);
+    transform: rotateY(-180deg);
     cursor: default;
     pointer-events: none;
 }
 
-.deck .card.match {
+.deck .card.match .card-inner {
     animation: blob 0.5s ease 0.3s;
 }
 
-.deck .card.fail {
+.deck .card.fail .card-inner {
     animation: shake 0.2s ease 0.3s;
 }
 
 .face {
+    position: absolute;
     font-size: 5vw;
-    background-color: #ff8436;
     height: 100%;
     width: 100%;
+    background-color: #ff8436;
+    border-radius: 8px;
     display: flex;
     justify-content: center;
     align-items: center;
     backface-visibility: hidden;
-    transition: background-color 0.5s ease;
+    transform: rotateY(180deg);
+    transition: background-color 0.7s ease;
 }
 
 .deck .card.match .face {

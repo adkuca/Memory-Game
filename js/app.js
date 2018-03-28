@@ -98,9 +98,13 @@ document.addEventListener("DOMContentLoaded", function() {
             li.setAttribute('data-index', `${containerArray.finalIconArr[x].iconIndex}`);
             ul.appendChild(li);
 
+            const cardInner = document.createElement('div');
+            cardInner.setAttribute('class', `card-inner`);
+            li.appendChild(cardInner);
+
             const face = document.createElement('div');
             face.setAttribute('class', `face fa ${containerArray.finalIconArr[x].iconClass}`);
-            li.appendChild(face);
+            cardInner.appendChild(face);
         }
         cont.appendChild(frag);
     }
