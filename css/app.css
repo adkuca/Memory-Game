@@ -51,6 +51,11 @@ h1 {
     text-align: center;
 }
 
+.gameEnd.visible {
+    visibility: visible;
+    animation: fadeIn 0.5s ease-in-out;
+}
+
 .btn-proceed {
     height: 35px;
     width: 100px;
@@ -166,6 +171,24 @@ h1 {
     40% { transform: translate(1px, -1px) rotate(1deg);}
     60% { transform: translate(-1px, -1px) rotate(-1deg);}
     80% { transform: translate(1px, 1px) rotate(1deg);}
+}
+
+@keyframes fadeIn {
+    0% {
+        transform: scale(0);
+        opacity: 0.0;
+    }
+    60% {
+        transform: scale(1.1);
+    }
+    80% {
+        transform: scale(0.9);
+        opacity: 1;
+    }
+    100% {
+        transform: scale(1);
+        opacity: 1;
+    }
 }
 
 /*

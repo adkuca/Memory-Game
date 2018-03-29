@@ -41,6 +41,11 @@ document.addEventListener("DOMContentLoaded", function() {
         toggleClass(openCardsLast, openCardsForelast, 'fail');
     }
 
+    const gameEnd = document.getElementsByClassName('gameEnd')[0];
+    const endTitle = document.getElementsByClassName('end-title')[0];
+    const endStats = document.getElementsByClassName('end-stats')[0];
+    const proceedBtn = document.getElementsByClassName('btn-proceed')[0];
+
     let iconArr = [
         {
             iconIndex: 1,
@@ -125,15 +130,31 @@ document.addEventListener("DOMContentLoaded", function() {
                 if (checkMatch(e)) {
                     console.log('MATCHED');
                     toggleClass(containerArray.openCardsLast, containerArray.openCardsForelast, 'match');
+                    if (containerArray.openCards.length === containerArray.finalIconArr.length) gameWon();
                 } else {
                     console.log('UNMATCHED');
                     toggleClass(containerArray.openCardsLast, containerArray.openCardsForelast, 'fail');
                     setTimeout(closeCards, 600, containerArray.openCardsLast, containerArray.openCardsForelast);
+                    containerArray.openCards.pop();
+                    containerArray.openCards.pop();
                 }
                 containerArray.stepCount = 0;
             }
         }
     });
+
+    function gameWon() {
+        gameEnd.classList.toggle('visible');
+    }
+
+    function gameLost() {
+        gameEnd.classList.toggle('visible');
+    }
+
+    proceedBtn.addEventListener('click', function() {
+        gameEnd.classList.toggle('visible');
+    });
+
 });
 /*
  * set up the event listener for a card. If a card is clicked:
