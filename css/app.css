@@ -33,6 +33,33 @@ h1 {
     font-weight: 300;
 }
 
+.gameEnd {
+    visibility: hidden;
+    z-index: 10;
+    position: fixed;
+    height: 100%;
+    width: 100%;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    margin: auto auto;
+    background-color: white;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+}
+
+.btn-proceed {
+    height: 35px;
+    width: 100px;
+    color: white;
+    background-color: #02ccba;
+    border: 1px solid #00a6a6;
+    border-radius: 15px;
+}
+
 /*
  * Styles for the deck of cards
  */
