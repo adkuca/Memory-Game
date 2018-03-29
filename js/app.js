@@ -94,7 +94,7 @@ document.addEventListener("DOMContentLoaded", function() {
     };
 
     const cont = document.querySelector('.deck-container');
-    function create() {
+    function createDeck() {
         const frag = document.createDocumentFragment();
         const ul = document.createElement('ul');
         ul.setAttribute('class', 'deck');
@@ -117,11 +117,15 @@ document.addEventListener("DOMContentLoaded", function() {
         cont.appendChild(frag);
     }
 
-    create();
+    createDeck();
+
+    document.querySelector('.restart').addEventListener('click', function() {
+        resetGame();
+        shuffle(containerArray.finalIconArr);
+        createDeck();
+    });
 
     document.querySelector('.deck-container').addEventListener('click', function(e) {
-
-
         if (e.target.matches('.card')) {
             if (!timerOn) timer(100, 0, 120);
             containerArray.stepCount += 1;
@@ -194,6 +198,26 @@ document.addEventListener("DOMContentLoaded", function() {
     function resetTimer() {
         clearTimeout(timedFunc);
         timerOn = false;
+    }
+
+    function resetGame() {
+        resetTimer();
+        resetTimerSpan();
+        removeDeck();
+        containerArray.openCards = [];
+        containerArray.clickCount = 0;
+        containerArray.stepCount = 0;
+    }
+
+    function removeDeck() {
+        while (cont.firstChild) {
+            cont.removeChild(cont.firstChild);
+        }
+    }
+
+    function resetTimerSpan() {
+        timerSpan.style.color = "black";
+        timerSpan.textContent = "Timer: 00:00.0";
     }
 
 });
