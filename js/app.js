@@ -45,6 +45,9 @@ document.addEventListener("DOMContentLoaded", function() {
     const endTitle = document.getElementsByClassName('end-title')[0];
     const endStats = document.getElementsByClassName('end-stats')[0];
     const proceedBtn = document.getElementsByClassName('btn-proceed')[0];
+    const timerSpan = document.querySelector('.timer');
+    timedFunc = undefined;
+    timerOn = false;
 
     let iconArr = [
         {
@@ -120,6 +123,7 @@ document.addEventListener("DOMContentLoaded", function() {
 
 
         if (e.target.matches('.card')) {
+            if (!timerOn) timer(100, 0, 120);
             containerArray.stepCount += 1;
             containerArray.clickCount += 1;
 
@@ -154,6 +158,43 @@ document.addEventListener("DOMContentLoaded", function() {
     proceedBtn.addEventListener('click', function() {
         gameEnd.classList.toggle('visible');
     });
+
+    function timer(interval, startAt, endAt) { //interval in ms, startAt in sec, endAt in sec 0 for infinite
+        let counter = 0;
+        const startTime = Date.now() - (startAt * 1000);
+        timerOn = true;
+        timedFunc = setTimeout(tick, interval);
+
+        function tick() {
+            //calculation drift time
+            counter += interval;
+            const expectedTime = startTime + counter;
+            const driftTime = Date.now() - expectedTime;
+
+            //correcting
+            const timePast = Date.now() - startTime;
+            const corrTimePast = timePast - driftTime;
+
+            const time = [
+                Math.floor((corrTimePast / 1000 / 60) % 60),
+                Math.floor((corrTimePast / 1000) % 60),
+                Math.floor((corrTimePast / 100) % 10)
+            ];
+
+            const prepMin = time[0] < 10 ? `0${time[0]}` : `${time[0]}`;
+            const prepSec = time[1] < 10 ? `0${time[1]}` : `${time[1]}`;
+            const prepMS = time[2];
+            timerSpan.textContent = `Timer: ${prepMin}:${prepSec}.${prepMS}`;
+
+            if ((endAt * 1000 + startTime) <= Date.now() && endAt) gameLost();
+            else timedFunc = setTimeout(tick, interval - driftTime);
+        }
+    }
+
+    function resetTimer() {
+        clearTimeout(timedFunc);
+        timerOn = false;
+    }
 
 });
 /*
