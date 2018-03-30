@@ -1,61 +1,21 @@
-/*
- * Create a list that holds all of your cards
- */
-
-
-/*
- * Display the cards on the page
- *   - shuffle the list of cards using the provided "shuffle" method below
- *   - loop through each card and create its HTML
- *   - add each card's HTML to the page
- */
 document.addEventListener("DOMContentLoaded", function() {
-
-
-// Shuffle function from http://stackoverflow.com/a/2450976
-    function shuffle(array) {
-        let currentIndex = array.length, temporaryValue, randomIndex;
-
-        while (currentIndex !== 0) {
-            randomIndex = Math.floor(Math.random() * currentIndex);
-            currentIndex -= 1;
-            temporaryValue = array[currentIndex];
-            array[currentIndex] = array[randomIndex];
-            array[randomIndex] = temporaryValue;
-        }
-
-        return array;
-    }
-
-    function toggleClass(elm1, elm2, classString) {
-        elm1.classList.toggle(classString);
-        elm2.classList.toggle(classString);
-    }
-
-    function checkMatch() {
-        return (containerArray.openCardsLast.getAttribute('data-index') === containerArray.openCardsForelast.getAttribute('data-index'));
-    }
-
-    function closeCards(openCardsLast, openCardsForelast) {
-        toggleClass(openCardsLast, openCardsForelast, 'open');
-        toggleClass(openCardsLast, openCardsForelast, 'fail');
-    }
-
-    const cont = document.querySelector('.deck-container');
-    const deckContainer = document.querySelector('.deck-container');
+    const cont = document.getElementsByClassName('deck-container')[0];
+    const deckContainer = document.getElementsByClassName('deck-container')[0];
     const gameEnd = document.getElementsByClassName('gameEnd')[0];
     const endTitle = document.getElementsByClassName('end-title')[0];
     const endStats = document.getElementsByClassName('end-stats')[0];
-    const proceedBtn = document.getElementsByClassName('btn-proceed')[0];
-    const timerSpan = document.querySelector('.timer');
+    const playAgainBtn = document.getElementsByClassName('btn-proceed')[0];
+    const timerSpan = document.getElementsByClassName('timer')[0];
     const attemptSpan = document.getElementsByClassName('moves')[0];
     const star1 = document.getElementsByClassName('fa-star')[0];
     const star2 = document.getElementsByClassName('fa-star')[1];
     const star3 = document.getElementsByClassName('fa-star')[2];
+    const restart = document.getElementsByClassName('restart')[0];
+
     timedFunc = undefined;
     timerOn = false;
 
-    let iconArr = [
+    const iconArr = [
         {
             iconIndex: 1,
             iconClass: "fa-diamond"
@@ -90,8 +50,8 @@ document.addEventListener("DOMContentLoaded", function() {
         }
     ];
     
-    let containerArray = {
-        finalIconArr: shuffle(iconArr.concat(iconArr)),
+    const containerArray = {
+        finalIconArr: iconArr.concat(iconArr),
         stepCount: 0,
         clickCount: 0,
         attemptCount: 0,
@@ -106,13 +66,60 @@ document.addEventListener("DOMContentLoaded", function() {
         }
     };
 
+    readyDeck();
+
+    restart.addEventListener('click', function() {
+        resetGame();
+        readyDeck();
+    });
+
+    playAgainBtn.addEventListener('click', function() {
+        readyDeck();
+        gameEnd.classList.toggle('fadeOut');
+    });
+
+    deckContainer.addEventListener('dragstart', function(e) {
+        e.preventDefault();
+    });
+
+    deckContainer.addEventListener('click', cardLogic);
+
+    function cardLogic(e) {
+        if (e.target.classList.contains('card')) {
+            if (!timerOn) timer(100, 0, 120);
+            containerArray.stepCount += 1;
+            containerArray.clickCount += 1;
+            e.target.classList.toggle('open');
+            containerArray.openCards.push(e.target);
+
+            if (containerArray.stepCount === 2) {
+                attempt();
+                if (checkMatch()) {
+                    toggleClass(containerArray.openCardsLast, containerArray.openCardsForelast, 'match');
+                    if (containerArray.openCards.length === containerArray.finalIconArr.length) gameWon();
+                } else {
+                    toggleClass(containerArray.openCardsLast, containerArray.openCardsForelast, 'fail');
+                    setTimeout(closeCards, 600, containerArray.openCardsLast, containerArray.openCardsForelast);
+                    containerArray.openCards.pop();
+                    containerArray.openCards.pop();
+                }
+                containerArray.stepCount = 0;
+            }
+        }
+    }
+
+    function readyDeck() {
+        shuffle(containerArray.finalIconArr);
+        createDeck();
+    }
+
     function createDeck() {
         const frag = document.createDocumentFragment();
         const ul = document.createElement('ul');
         ul.setAttribute('class', 'deck');
         frag.appendChild(ul);
 
-        for (let x = 0; x < 16; x++) {
+        for (let x = 0, n = containerArray.finalIconArr.length; x < n; x++) {
             const li = document.createElement('li');
             li.setAttribute('class', 'card');
             li.setAttribute('data-index', `${containerArray.finalIconArr[x].iconIndex}`);
@@ -128,66 +135,6 @@ document.addEventListener("DOMContentLoaded", function() {
         }
         cont.appendChild(frag);
     }
-
-    createDeck();
-
-    document.querySelector('.restart').addEventListener('click', function() {
-        resetGame();
-        shuffle(containerArray.finalIconArr);
-        createDeck();
-    });
-
-    deckContainer.addEventListener('click', function(e) {
-        if (e.target.matches('.card')) {
-            if (!timerOn) timer(100, 0, 120);
-            containerArray.stepCount += 1;
-            containerArray.clickCount += 1;
-
-            e.target.classList.toggle('open');
-            containerArray.openCards.push(e.target);
-
-            if (containerArray.stepCount === 2) {
-                attempt();
-                if (checkMatch(e)) {
-                    console.log('MATCHED');
-                    toggleClass(containerArray.openCardsLast, containerArray.openCardsForelast, 'match');
-                    if (containerArray.openCards.length === containerArray.finalIconArr.length) gameWon();
-                } else {
-                    console.log('UNMATCHED');
-                    toggleClass(containerArray.openCardsLast, containerArray.openCardsForelast, 'fail');
-                    setTimeout(closeCards, 600, containerArray.openCardsLast, containerArray.openCardsForelast);
-                    containerArray.openCards.pop();
-                    containerArray.openCards.pop();
-                }
-                containerArray.stepCount = 0;
-            }
-        }
-    });
-    deckContainer.addEventListener('dragstart', function(e) {
-        e.preventDefault();
-    });
-
-    function gameWon() {
-        endTitle.textContent = "Congratulations! You Won!";
-        const starText = containerArray.starsCount === 1 ? "Star" : "Stars";
-        endStats.textContent = `With ${containerArray.attemptCount} Moves and ${containerArray.starsCount} ${starText}.`;
-        gameEnd.classList.toggle('fadeIn');
-        resetGame();
-    }
-
-    function gameLost() {
-        endTitle.textContent = "Congratulations! You Lost!";
-        const starText = containerArray.starsCount === 1 ? "Star" : "Stars";
-        endStats.textContent = `With ${containerArray.attemptCount} Moves and ${containerArray.starsCount} ${starText}.`;
-        gameEnd.classList.toggle('fadeIn');
-        resetGame();
-    }
-
-    proceedBtn.addEventListener('click', function() {
-        shuffle(containerArray.finalIconArr);
-        createDeck();
-        gameEnd.classList.toggle('fadeOut');
-    });
 
     function timer(interval, startAt, endAt) { //interval in ms, startAt in sec, endAt in sec 0 for infinite
         let counter = 0;
@@ -223,54 +170,29 @@ document.addEventListener("DOMContentLoaded", function() {
                 star1.style.visibility = "hidden";
             }
 
-            if ((endAt * 1000 + startTime) <= Date.now() && endAt) gameLost();
-            else timedFunc = setTimeout(tick, interval - driftTime);
+            ((endAt * 1000 + startTime) <= Date.now() && endAt) ? gameLost() : timedFunc = setTimeout(tick, interval - driftTime);
         }
     }
 
-    function resetTimer() {
-        clearTimeout(timedFunc);
-        timerOn = false;
-    }
+    // Shuffle function from http://stackoverflow.com/a/2450976
+    function shuffle(array) {
+        let currentIndex = array.length, temporaryValue, randomIndex;
 
-    function resetGame() {
-        resetTimer();
-        resetTimerSpan();
-        resetStars();
-        removeDeck();
-        containerArray.openCards = [];
-        containerArray.clickCount = 0;
-        containerArray.stepCount = 0;
-        resetMoves();
-    }
-
-    function removeDeck() {
-        while (cont.firstChild) {
-            cont.removeChild(cont.firstChild);
+        while (currentIndex !== 0) {
+            randomIndex = Math.floor(Math.random() * currentIndex);
+            currentIndex -= 1;
+            temporaryValue = array[currentIndex];
+            array[currentIndex] = array[randomIndex];
+            array[randomIndex] = temporaryValue;
         }
-    }
 
-    function resetTimerSpan() {
-        timerSpan.style.color = "black";
-        timerSpan.textContent = "Timer: 00:00.0";
+        return array;
     }
 
     function attempt() {
         containerArray.attemptCount += 1;
         attemptSpan.textContent = `Moves: ${containerArray.attemptCount}`;
         spamPenalty();
-    }
-
-    function resetMoves() {
-        containerArray.attemptCount = 0;
-        attemptSpan.style.color = "black";
-        attemptSpan.textContent = "Moves: 0";
-    }
-
-    function resetStars() {
-        star1.style.visibility = "visible";
-        star2.style.visibility = "visible";
-        star3.style.visibility = "visible";
     }
 
     function spamPenalty() {
@@ -280,6 +202,75 @@ document.addEventListener("DOMContentLoaded", function() {
         else if (containerArray.attemptCount === 40) {
             star1.style.visibility = "hidden";
             gameLost();
+        }
+    }
+
+    function checkMatch() {
+        return (containerArray.openCardsLast.getAttribute('data-index') === containerArray.openCardsForelast.getAttribute('data-index'));
+    }
+
+    function toggleClass(elm1, elm2, classString) {
+        elm1.classList.toggle(classString);
+        elm2.classList.toggle(classString);
+    }
+
+    function closeCards(openCardsLast, openCardsForelast) {
+        toggleClass(openCardsLast, openCardsForelast, 'open');
+        toggleClass(openCardsLast, openCardsForelast, 'fail');
+    }
+
+    function gameWon() {
+        endTitle.textContent = "Congratulations! You Won!";
+        const starText = containerArray.starsCount === 1 ? "Star" : "Stars";
+        endStats.textContent = `With ${containerArray.attemptCount} Moves and ${containerArray.starsCount} ${starText}.`;
+        gameEnd.classList.toggle('fadeIn');
+        resetGame();
+    }
+
+    function gameLost() {
+        endTitle.textContent = "Congratulations! You Lost!";
+        const starText = containerArray.starsCount === 1 ? "Star" : "Stars";
+        endStats.textContent = `With ${containerArray.attemptCount} Moves and ${containerArray.starsCount} ${starText}.`;
+        gameEnd.classList.toggle('fadeIn');
+        resetGame();
+    }
+
+    function resetGame() {
+        resetTimer();
+        resetTimerSpan();
+        resetStars();
+        resetMoves();
+        removeDeck();
+        containerArray.openCards = [];
+        containerArray.clickCount = 0;
+        containerArray.stepCount = 0;
+    }
+
+    function resetTimer() {
+        clearTimeout(timedFunc);
+        timerOn = false;
+    }
+
+    function resetTimerSpan() {
+        timerSpan.style.color = "black";
+        timerSpan.textContent = "Timer: 00:00.0";
+    }
+
+    function resetStars() {
+        star1.style.visibility = "visible";
+        star2.style.visibility = "visible";
+        star3.style.visibility = "visible";
+    }
+
+    function resetMoves() {
+        containerArray.attemptCount = 0;
+        attemptSpan.style.color = "black";
+        attemptSpan.textContent = "Moves: 0";
+    }
+
+    function removeDeck() {
+        while (cont.firstChild) {
+            cont.removeChild(cont.firstChild);
         }
     }
 });
