@@ -7,6 +7,7 @@ document.addEventListener("DOMContentLoaded", function() {
     const gameEnd = document.getElementsByClassName('game-end')[0];
     const endTitle = document.getElementsByClassName('end-title')[0];
     const endStats = document.getElementsByClassName('end-stats')[0];
+    const endTime = document.getElementsByClassName('end-time')[0];
     const playAgainBtn = document.getElementsByClassName('btn-proceed')[0];
     const timerSpan = document.getElementsByClassName('timer')[0];
     const attemptSpan = document.getElementsByClassName('moves')[0];
@@ -59,8 +60,10 @@ document.addEventListener("DOMContentLoaded", function() {
         clickCount: 0,
         moveCount: 0,
         openCards: [],
+        scoreArray: [],
         get openCardsLast() { return this.openCards[this.openCards.length - 1] },
         get openCardsForelast() { return this.openCards[this.openCards.length - 2] },
+        get lastScore() { return this.scoreArray[this.scoreArray.length - 1] },
         get starsCount() {
             if (star3.style.visibility !== "hidden") return 3;
             else if (star2.style.visibility !== "hidden") return 2;
@@ -104,7 +107,10 @@ document.addEventListener("DOMContentLoaded", function() {
                 attempt();
                 if (checkMatch()) {
                     toggleClass(containerArray.openCardsLast, containerArray.openCardsForelast, 'match');
-                    if (containerArray.openCards.length === containerArray.finalIconArr.length) gameWon();
+                    if (containerArray.openCards.length === containerArray.finalIconArr.length) {
+                        fetchStats();
+                        gameWon();
+                    }
                 } else {
                     toggleClass(containerArray.openCardsLast, containerArray.openCardsForelast, 'fail');
                     setTimeout(closeCards, 600, containerArray.openCardsLast, containerArray.openCardsForelast);
@@ -187,7 +193,10 @@ document.addEventListener("DOMContentLoaded", function() {
             }
 
             //stop if endAt met else reassign setTimeout with corrected time
-            ((endAt * 1000 + startTime) <= Date.now() && endAt) ? gameLost() : timedFunc = setTimeout(tick, interval - driftTime);
+            if ((endAt * 1000 + startTime) <= Date.now() && endAt) {
+                fetchStats();
+                gameLost();
+            } else timedFunc = setTimeout(tick, interval - driftTime);
         }
     }
 
@@ -222,7 +231,10 @@ document.addEventListener("DOMContentLoaded", function() {
         if (containerArray.moveCount === 15) star3.style.visibility = "hidden";
         else if (containerArray.moveCount === 25) star2.style.visibility = "hidden";
         else if (containerArray.moveCount === 35) attemptSpan.style.color = "red";
-        else if (containerArray.moveCount === 40) gameLost();
+        else if (containerArray.moveCount === 40) {
+            fetchStats();
+            gameLost();
+        }
     }
 
     /** Checks whether two last opened cards data-index matches */
@@ -250,8 +262,7 @@ document.addEventListener("DOMContentLoaded", function() {
     /** Shows stats when game won */
     function gameWon() {
         endTitle.textContent = "Congratulations! You Won!";
-        const starText = containerArray.starsCount === 1 ? "Star" : "Stars";
-        endStats.textContent = `With ${containerArray.moveCount} Moves and ${containerArray.starsCount} ${starText}.`;
+        stats();
         resetFadeClasses(gameEnd);
         gameEnd.classList.toggle('fadeIn');
         resetGame();
@@ -260,11 +271,24 @@ document.addEventListener("DOMContentLoaded", function() {
     /** Shows stats when game lost */
     function gameLost() {
         endTitle.textContent = "Congratulations! You Lost!";
-        const starText = containerArray.starsCount === 1 ? "Star" : "Stars";
-        endStats.textContent = `With ${containerArray.moveCount} Moves and ${containerArray.starsCount} ${starText}.`;
+        stats();
         resetFadeClasses(gameEnd);
         gameEnd.classList.toggle('fadeIn');
         resetGame();
+    }
+
+    function fetchStats() {
+        containerArray.scoreArray.push({moveCount: containerArray.moveCount, starsCount: containerArray.starsCount, timerStr: timerSpan.textContent});
+    }
+
+    function stats() {
+        const str = containerArray.lastScore.timerStr;
+        const min = Number(str.substr(8,1));
+        const sec = Number(str.substr(10,2));
+        const starText = containerArray.starsCount === 1 ? "Star" : "Stars";
+        endStats.textContent = `With ${containerArray.moveCount} Moves and ${containerArray.starsCount} ${starText}.`;
+        if (min) endTime.textContent = `Your time is ${min} minutes and ${sec} seconds.`;
+        else endTime.textContent = `Your time is ${sec} seconds.`;
     }
 
     /**
