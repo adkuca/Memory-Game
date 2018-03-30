@@ -223,6 +223,7 @@ document.addEventListener("DOMContentLoaded", function() {
         endTitle.textContent = "Congratulations! You Won!";
         const starText = containerArray.starsCount === 1 ? "Star" : "Stars";
         endStats.textContent = `With ${containerArray.attemptCount} Moves and ${containerArray.starsCount} ${starText}.`;
+        resetFadeClasses(gameEnd);
         gameEnd.classList.toggle('fadeIn');
         resetGame();
     }
@@ -231,8 +232,14 @@ document.addEventListener("DOMContentLoaded", function() {
         endTitle.textContent = "Congratulations! You Lost!";
         const starText = containerArray.starsCount === 1 ? "Star" : "Stars";
         endStats.textContent = `With ${containerArray.attemptCount} Moves and ${containerArray.starsCount} ${starText}.`;
+        resetFadeClasses(gameEnd);
         gameEnd.classList.toggle('fadeIn');
         resetGame();
+    }
+
+    function resetFadeClasses(elm) {
+        elm.classList.remove('fadeIn');
+        elm.classList.remove('fadeOut');
     }
 
     function resetGame() {
