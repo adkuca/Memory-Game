@@ -41,6 +41,8 @@ document.addEventListener("DOMContentLoaded", function() {
         toggleClass(openCardsLast, openCardsForelast, 'fail');
     }
 
+    const cont = document.querySelector('.deck-container');
+    const deckContainer = document.querySelector('.deck-container');
     const gameEnd = document.getElementsByClassName('gameEnd')[0];
     const endTitle = document.getElementsByClassName('end-title')[0];
     const endStats = document.getElementsByClassName('end-stats')[0];
@@ -104,7 +106,6 @@ document.addEventListener("DOMContentLoaded", function() {
         }
     };
 
-    const cont = document.querySelector('.deck-container');
     function createDeck() {
         const frag = document.createDocumentFragment();
         const ul = document.createElement('ul');
@@ -136,7 +137,7 @@ document.addEventListener("DOMContentLoaded", function() {
         createDeck();
     });
 
-    document.querySelector('.deck-container').addEventListener('click', function(e) {
+    deckContainer.addEventListener('click', function(e) {
         if (e.target.matches('.card')) {
             if (!timerOn) timer(100, 0, 120);
             containerArray.stepCount += 1;
@@ -161,6 +162,9 @@ document.addEventListener("DOMContentLoaded", function() {
                 containerArray.stepCount = 0;
             }
         }
+    });
+    deckContainer.addEventListener('dragstart', function(e) {
+        e.preventDefault();
     });
 
     function gameWon() {
