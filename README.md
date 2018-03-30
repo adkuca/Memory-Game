@@ -1,20 +1,30 @@
 # Memory Game Project
 
+Project for the Udacity FEND program
+
 ## Table of Contents
 
-* [Instructions](#instructions)
+* [Features](#features)
 * [Contributing](#contributing)
+* [Live Demo](#live-demo)
+* [Author](#author)
 
-## Instructions
+## Features
 
-The starter project has some HTML and CSS styling to display a static version of the Memory Game project. You'll need to convert this project from a static project to an interactive one. This will require modifying the HTML and CSS files, but primarily the JavaScript file.
-
-To get started, open `js/app.js` and start building out the app's functionality
-
-For specific, detailed instructions, look at the project instructions in the [Udacity Classroom](https://classroom.udacity.com/me).
+- No waiting restriction between moves
+- Timer
+- Move counter
+- Star rating
+- Reset button
 
 ## Contributing
 
-This repository is the starter code for _all_ Udacity students. Therefore, we most likely will not accept pull requests.
+Any improvements are welcome. Especially tips on structuring and existing functionality improvements or refraction.
 
-For details, check out [CONTRIBUTING.md](CONTRIBUTING.md).
+## Live Demo
+
+* Live Github Page - [Memory-Game](https://adkuca.github.io/Memory-Game/)
+
+## Author
+
+* Adam Kuča - *Creator* - [Memory-Game - repo](https://github.com/adkuca/Memory-Game)
