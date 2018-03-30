@@ -1,4 +1,7 @@
 document.addEventListener("DOMContentLoaded", function() {
+
+    /** DECLARATIONS */
+
     const cont = document.getElementsByClassName('deck-container')[0];
     const deckContainer = document.getElementsByClassName('deck-container')[0];
     const gameEnd = document.getElementsByClassName('gameEnd')[0];
@@ -54,7 +57,7 @@ document.addEventListener("DOMContentLoaded", function() {
         finalIconArr: iconArr.concat(iconArr),
         stepCount: 0,
         clickCount: 0,
-        attemptCount: 0,
+        moveCount: 0,
         openCards: [],
         get openCardsLast() { return this.openCards[this.openCards.length - 1] },
         get openCardsForelast() { return this.openCards[this.openCards.length - 2] },
@@ -67,6 +70,8 @@ document.addEventListener("DOMContentLoaded", function() {
     };
 
     readyDeck();
+
+    /** EVENT HANDLERS */
 
     restart.addEventListener('click', function() {
         resetGame();
@@ -84,6 +89,9 @@ document.addEventListener("DOMContentLoaded", function() {
 
     deckContainer.addEventListener('click', cardLogic);
 
+    /** FUNCTIONS */
+
+    /** Handles card logic */
     function cardLogic(e) {
         if (e.target.classList.contains('card')) {
             if (!timerOn) timer(100, 0, 120);
@@ -108,11 +116,13 @@ document.addEventListener("DOMContentLoaded", function() {
         }
     }
 
+    /** Sets deck */
     function readyDeck() {
         shuffle(containerArray.finalIconArr);
         createDeck();
     }
 
+    /** Creates deck */
     function createDeck() {
         const frag = document.createDocumentFragment();
         const ul = document.createElement('ul');
@@ -136,7 +146,13 @@ document.addEventListener("DOMContentLoaded", function() {
         cont.appendChild(frag);
     }
 
-    function timer(interval, startAt, endAt) { //interval in ms, startAt in sec, endAt in sec 0 for infinite
+    /**
+     * @description Timer that counts upwards (stopwatch) with drift correction
+     * @param {number} interval - Delay at which it runs tick / updates time in miliseconds
+     * @param {number} startAt - Time it starts counting from in seconds
+     * @param {number} endAt - Time it stops executing in seconds
+     */
+    function timer(interval, startAt, endAt) { //interval in ms, startAt in sec, endAt in sec - 0 for infinite
         let counter = 0;
         const startTime = Date.now() - (startAt * 1000);
         timerOn = true;
@@ -152,6 +168,7 @@ document.addEventListener("DOMContentLoaded", function() {
             const timePast = Date.now() - startTime;
             const corrTimePast = timePast - driftTime;
 
+            //do
             const time = [
                 Math.floor((corrTimePast / 1000 / 60) % 60),
                 Math.floor((corrTimePast / 1000) % 60),
@@ -170,11 +187,16 @@ document.addEventListener("DOMContentLoaded", function() {
                 timerSpan.style.color = "red";
             }
 
+            //stop if endAt met else reassign setTimeout with corrected time
             ((endAt * 1000 + startTime) <= Date.now() && endAt) ? gameLost() : timedFunc = setTimeout(tick, interval - driftTime);
         }
     }
 
-    // Shuffle function from http://stackoverflow.com/a/2450976
+    /**
+     * @description Shuffles array
+     * @param {Object[]} array
+     * Shuffle function from http://stackoverflow.com/a/2450976
+     */
     function shuffle(array) {
         let currentIndex = array.length, temporaryValue, randomIndex;
 
@@ -189,59 +211,76 @@ document.addEventListener("DOMContentLoaded", function() {
         return array;
     }
 
+    /** Counts moves and updates text */
     function attempt() {
-        containerArray.attemptCount += 1;
-        attemptSpan.textContent = `Moves: ${containerArray.attemptCount}`;
+        containerArray.moveCount += 1;
+        attemptSpan.textContent = `Moves: ${containerArray.moveCount}`;
         spamPenalty();
     }
 
+    /** Handles star visibility */
     function spamPenalty() {
-        if (containerArray.attemptCount === 15) star3.style.visibility = "hidden";
-        else if (containerArray.attemptCount === 25) star2.style.visibility = "hidden";
-        else if (containerArray.attemptCount === 35) {
+        if (containerArray.moveCount === 15) star3.style.visibility = "hidden";
+        else if (containerArray.moveCount === 25) star2.style.visibility = "hidden";
+        else if (containerArray.moveCount === 35) {
             star1.style.visibility = "hidden";
             attemptSpan.style.color = "red";
         }
-        else if (containerArray.attemptCount === 40) gameLost();
+        else if (containerArray.moveCount === 40) gameLost();
     }
 
+    /** Checks whether two last opened cards data-index matches */
     function checkMatch() {
         return (containerArray.openCardsLast.getAttribute('data-index') === containerArray.openCardsForelast.getAttribute('data-index'));
     }
 
+    /**
+     * @description Toggles class
+     * @param {Object} elm1
+     * @param {Object} elm2
+     * @param {string} classString
+     */
     function toggleClass(elm1, elm2, classString) {
         elm1.classList.toggle(classString);
         elm2.classList.toggle(classString);
     }
 
+    /** Callback function of setTimeout */
     function closeCards(openCardsLast, openCardsForelast) {
         toggleClass(openCardsLast, openCardsForelast, 'open');
         toggleClass(openCardsLast, openCardsForelast, 'fail');
     }
 
+    /** Shows stats when game won */
     function gameWon() {
         endTitle.textContent = "Congratulations! You Won!";
         const starText = containerArray.starsCount === 1 ? "Star" : "Stars";
-        endStats.textContent = `With ${containerArray.attemptCount} Moves and ${containerArray.starsCount} ${starText}.`;
+        endStats.textContent = `With ${containerArray.moveCount} Moves and ${containerArray.starsCount} ${starText}.`;
         resetFadeClasses(gameEnd);
         gameEnd.classList.toggle('fadeIn');
         resetGame();
     }
 
+    /** Shows stats when game lost */
     function gameLost() {
         endTitle.textContent = "Congratulations! You Lost!";
         const starText = containerArray.starsCount === 1 ? "Star" : "Stars";
-        endStats.textContent = `With ${containerArray.attemptCount} Moves and ${containerArray.starsCount} ${starText}.`;
+        endStats.textContent = `With ${containerArray.moveCount} Moves and ${containerArray.starsCount} ${starText}.`;
         resetFadeClasses(gameEnd);
         gameEnd.classList.toggle('fadeIn');
         resetGame();
     }
 
+    /**
+     * @description Removes fade classes
+     * @param {Object} elm
+     */
     function resetFadeClasses(elm) {
         elm.classList.remove('fadeIn');
         elm.classList.remove('fadeOut');
     }
 
+    /** Resets game state */
     function resetGame() {
         resetTimer();
         resetTimerSpan();
@@ -253,41 +292,36 @@ document.addEventListener("DOMContentLoaded", function() {
         containerArray.stepCount = 0;
     }
 
+    /** Stops timer function execution */
     function resetTimer() {
         clearTimeout(timedFunc);
         timerOn = false;
     }
 
+    /** Resets timer */
     function resetTimerSpan() {
         timerSpan.style.color = "black";
         timerSpan.textContent = "Timer: 00:00.0";
     }
 
+    /** Resets stars to visible */
     function resetStars() {
         star1.style.visibility = "visible";
         star2.style.visibility = "visible";
         star3.style.visibility = "visible";
     }
 
+    /** Resets moves counter */
     function resetMoves() {
-        containerArray.attemptCount = 0;
+        containerArray.moveCount = 0;
         attemptSpan.style.color = "black";
         attemptSpan.textContent = "Moves: 0";
     }
 
+    /** Removes cards */
     function removeDeck() {
         while (cont.firstChild) {
             cont.removeChild(cont.firstChild);
         }
     }
 });
-/*
- * set up the event listener for a card. If a card is clicked:
- *  - display the card's symbol (put this functionality in another function that you call from this one)
- *  - add the card to a *list* of "open" cards (put this functionality in another function that you call from this one)
- *  - if the list already has another card, check to see if the two cards match
- *    + if the cards do match, lock the cards in the open position (put this functionality in another function that you call from this one)
- *    + if the cards do not match, remove the cards from the list and hide the card's symbol (put this functionality in another function that you call from this one)
- *    + increment the move counter and display it on the page (put this functionality in another function that you call from this one)
- *    + if all cards have matched, display a message with the final score (put this functionality in another function that you call from this one)
- */
