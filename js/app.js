@@ -91,7 +91,7 @@ document.addEventListener("DOMContentLoaded", function() {
 
     /** FUNCTIONS */
 
-    /** Handles card logic */
+    /** Handles card matching logic */
     function cardLogic(e) {
         if (e.target.classList.contains('card')) {
             if (!timerOn) timer(100, 0, 120);
@@ -152,7 +152,7 @@ document.addEventListener("DOMContentLoaded", function() {
      * @param {number} startAt - Time it starts counting from in seconds
      * @param {number} endAt - Time it stops executing in seconds
      */
-    function timer(interval, startAt, endAt) { //interval in ms, startAt in sec, endAt in sec - 0 for infinite
+    function timer(interval, startAt, endAt) {
         let counter = 0;
         const startTime = Date.now() - (startAt * 1000);
         timerOn = true;
@@ -183,7 +183,6 @@ document.addEventListener("DOMContentLoaded", function() {
             if (time[0] === 0 && time[1] === 30 && time[2] === 0) star3.style.visibility = "hidden";
             else if (time[0] === 1 && time[1] === 0 && time[2] === 0) star2.style.visibility = "hidden";
             else if (time[0] === 1 && time[1] === 50 && time[2] === 0) {
-                star1.style.visibility = "hidden";
                 timerSpan.style.color = "red";
             }
 
@@ -222,10 +221,7 @@ document.addEventListener("DOMContentLoaded", function() {
     function spamPenalty() {
         if (containerArray.moveCount === 15) star3.style.visibility = "hidden";
         else if (containerArray.moveCount === 25) star2.style.visibility = "hidden";
-        else if (containerArray.moveCount === 35) {
-            star1.style.visibility = "hidden";
-            attemptSpan.style.color = "red";
-        }
+        else if (containerArray.moveCount === 35) attemptSpan.style.color = "red";
         else if (containerArray.moveCount === 40) gameLost();
     }
 
@@ -306,7 +302,6 @@ document.addEventListener("DOMContentLoaded", function() {
 
     /** Resets stars to visible */
     function resetStars() {
-        star1.style.visibility = "visible";
         star2.style.visibility = "visible";
         star3.style.visibility = "visible";
     }
