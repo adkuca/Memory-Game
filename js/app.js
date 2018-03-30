@@ -97,9 +97,9 @@ document.addEventListener("DOMContentLoaded", function() {
         get openCardsLast() { return this.openCards[this.openCards.length - 1] },
         get openCardsForelast() { return this.openCards[this.openCards.length - 2] },
         get starsCount() {
-            if (star3.style.visibility === "visible") return 3;
-            else if (star2.style.visibility === "visible") return 2;
-            else if (star1.style.visibility === "visible") return 1;
+            if (star3.style.visibility !== "hidden") return 3;
+            else if (star2.style.visibility !== "hidden") return 2;
+            else if (star1.style.visibility !== "hidden") return 1;
             else return 0;
         }
     };
@@ -165,18 +165,22 @@ document.addEventListener("DOMContentLoaded", function() {
 
     function gameWon() {
         endTitle.textContent = "Congratulations! You Won!";
-        endStats.textContent = `With ${containerArray.stepCount} Moves and ${containerArray.starsCount} Stars.`;
+        const starText = containerArray.starsCount === 1 ? "Star" : "Stars";
+        endStats.textContent = `With ${containerArray.attemptCount} Moves and ${containerArray.starsCount} ${starText}.`;
         gameEnd.classList.toggle('visible');
+        resetGame();
     }
 
     function gameLost() {
         endTitle.textContent = "Congratulations! You Lost!";
-        endStats.textContent = `With ${containerArray.stepCount} Moves and ${containerArray.starsCount} Stars.`;
+        const starText = containerArray.starsCount === 1 ? "Star" : "Stars";
+        endStats.textContent = `With ${containerArray.attemptCount} Moves and ${containerArray.starsCount} ${starText}.`;
         gameEnd.classList.toggle('visible');
+        resetGame();
     }
 
     proceedBtn.addEventListener('click', function() {
-        resetGame();
+        shuffle(containerArray.finalIconArr);
         createDeck();
         gameEnd.classList.toggle('visible');
     });
