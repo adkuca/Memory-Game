@@ -47,6 +47,9 @@ document.addEventListener("DOMContentLoaded", function() {
     const proceedBtn = document.getElementsByClassName('btn-proceed')[0];
     const timerSpan = document.querySelector('.timer');
     const attemptSpan = document.getElementsByClassName('moves')[0];
+    const star1 = document.getElementsByClassName('fa-star')[0];
+    const star2 = document.getElementsByClassName('fa-star')[1];
+    const star3 = document.getElementsByClassName('fa-star')[2];
     timedFunc = undefined;
     timerOn = false;
 
@@ -93,6 +96,12 @@ document.addEventListener("DOMContentLoaded", function() {
         openCards: [],
         get openCardsLast() { return this.openCards[this.openCards.length - 1] },
         get openCardsForelast() { return this.openCards[this.openCards.length - 2] },
+        get starsCount() {
+            if (star3.style.visibility === "visible") return 3;
+            else if (star2.style.visibility === "visible") return 2;
+            else if (star1.style.visibility === "visible") return 1;
+            else return 0;
+        }
     };
 
     const cont = document.querySelector('.deck-container');
@@ -155,14 +164,20 @@ document.addEventListener("DOMContentLoaded", function() {
     });
 
     function gameWon() {
+        endTitle.textContent = "Congratulations! You Won!";
+        endStats.textContent = `With ${containerArray.stepCount} Moves and ${containerArray.starsCount} Stars.`;
         gameEnd.classList.toggle('visible');
     }
 
     function gameLost() {
+        endTitle.textContent = "Congratulations! You Lost!";
+        endStats.textContent = `With ${containerArray.stepCount} Moves and ${containerArray.starsCount} Stars.`;
         gameEnd.classList.toggle('visible');
     }
 
     proceedBtn.addEventListener('click', function() {
+        resetGame();
+        createDeck();
         gameEnd.classList.toggle('visible');
     });
 
@@ -193,6 +208,13 @@ document.addEventListener("DOMContentLoaded", function() {
             const prepMS = time[2];
             timerSpan.textContent = `Timer: ${prepMin}:${prepSec}.${prepMS}`;
 
+            if (time[0] === 0 && time[1] === 30 && time[2] === 0) star3.style.visibility = "hidden";
+            else if (time[0] === 1 && time[1] === 0 && time[2] === 0) star2.style.visibility = "hidden";
+            else if (time[0] === 1 && time[1] === 50 && time[2] === 0) {
+                min.style.color = "red";
+                star1.style.visibility = "hidden";
+            }
+
             if ((endAt * 1000 + startTime) <= Date.now() && endAt) gameLost();
             else timedFunc = setTimeout(tick, interval - driftTime);
         }
@@ -206,6 +228,7 @@ document.addEventListener("DOMContentLoaded", function() {
     function resetGame() {
         resetTimer();
         resetTimerSpan();
+        resetStars();
         removeDeck();
         containerArray.openCards = [];
         containerArray.clickCount = 0;
@@ -227,6 +250,7 @@ document.addEventListener("DOMContentLoaded", function() {
     function attempt() {
         containerArray.attemptCount += 1;
         attemptSpan.textContent = `Moves: ${containerArray.attemptCount}`;
+        spamPenalty();
     }
 
     function resetMoves() {
@@ -235,6 +259,21 @@ document.addEventListener("DOMContentLoaded", function() {
         attemptSpan.textContent = "Moves: 0";
     }
 
+    function resetStars() {
+        star1.style.visibility = "visible";
+        star2.style.visibility = "visible";
+        star3.style.visibility = "visible";
+    }
+
+    function spamPenalty() {
+        if (containerArray.attemptCount === 15) star3.style.visibility = "hidden";
+        else if (containerArray.attemptCount === 25) star2.style.visibility = "hidden";
+        else if (containerArray.attemptCount === 35) attemptSpan.style.color = "red";
+        else if (containerArray.attemptCount === 40) {
+            star1.style.visibility = "hidden";
+            gameLost();
+        }
+    }
 });
 /*
  * set up the event listener for a card. If a card is clicked:
