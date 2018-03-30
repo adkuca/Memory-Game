@@ -167,7 +167,7 @@ document.addEventListener("DOMContentLoaded", function() {
         endTitle.textContent = "Congratulations! You Won!";
         const starText = containerArray.starsCount === 1 ? "Star" : "Stars";
         endStats.textContent = `With ${containerArray.attemptCount} Moves and ${containerArray.starsCount} ${starText}.`;
-        gameEnd.classList.toggle('visible');
+        gameEnd.classList.toggle('fadeIn');
         resetGame();
     }
 
@@ -175,14 +175,14 @@ document.addEventListener("DOMContentLoaded", function() {
         endTitle.textContent = "Congratulations! You Lost!";
         const starText = containerArray.starsCount === 1 ? "Star" : "Stars";
         endStats.textContent = `With ${containerArray.attemptCount} Moves and ${containerArray.starsCount} ${starText}.`;
-        gameEnd.classList.toggle('visible');
+        gameEnd.classList.toggle('fadeIn');
         resetGame();
     }
 
     proceedBtn.addEventListener('click', function() {
         shuffle(containerArray.finalIconArr);
         createDeck();
-        gameEnd.classList.toggle('visible');
+        gameEnd.classList.toggle('fadeOut');
     });
 
     function timer(interval, startAt, endAt) { //interval in ms, startAt in sec, endAt in sec 0 for infinite

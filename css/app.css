@@ -46,9 +46,12 @@ h1 {
     text-align: center;
 }
 
-.gameEnd.visible {
-    visibility: visible;
-    animation: fadeIn 0.5s ease-in-out;
+.gameEnd.fadeIn {
+    animation: fadeIn 0.5s ease-in-out forwards;
+}
+
+.gameEnd.fadeOut {
+    animation: fadeOut 0.5s ease-in-out forwards;
 }
 
 .status-header {
@@ -183,7 +186,8 @@ h1 {
 @keyframes fadeIn {
     0% {
         transform: scale(0);
-        opacity: 0.0;
+        opacity: 0;
+        visibility: hidden;
     }
     60% {
         transform: scale(1.1);
@@ -195,6 +199,26 @@ h1 {
     100% {
         transform: scale(1);
         opacity: 1;
+        visibility: visible;
+    }
+}
+@keyframes fadeOut {
+    0% {
+        transform: scale(1);
+        opacity: 1;
+        visibility: visible;
+    }
+    60% {
+        transform: scale(0.9);
+    }
+    80% {
+        transform: scale(1.1);
+        opacity: 0.5;
+    }
+    100% {
+        transform: scale(0);
+        opacity: 0;
+        visibility: hidden;
     }
 }
 
