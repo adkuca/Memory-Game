@@ -215,7 +215,7 @@ document.addEventListener("DOMContentLoaded", function() {
             if (time[0] === 0 && time[1] === 30 && time[2] === 0) star3.style.visibility = "hidden";
             else if (time[0] === 1 && time[1] === 0 && time[2] === 0) star2.style.visibility = "hidden";
             else if (time[0] === 1 && time[1] === 50 && time[2] === 0) {
-                min.style.color = "red";
+                timerSpan.style.color = "red";
                 star1.style.visibility = "hidden";
             }
 
