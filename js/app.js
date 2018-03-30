@@ -4,7 +4,7 @@ document.addEventListener("DOMContentLoaded", function() {
 
     const cont = document.getElementsByClassName('deck-container')[0];
     const deckContainer = document.getElementsByClassName('deck-container')[0];
-    const gameEnd = document.getElementsByClassName('gameEnd')[0];
+    const gameEnd = document.getElementsByClassName('game-end')[0];
     const endTitle = document.getElementsByClassName('end-title')[0];
     const endStats = document.getElementsByClassName('end-stats')[0];
     const playAgainBtn = document.getElementsByClassName('btn-proceed')[0];

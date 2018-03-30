@@ -21,6 +21,11 @@ body {
     font-family: 'Coda', cursive;
 }
 
+h1 {
+    font-family: 'Open Sans', sans-serif;
+    font-weight: 300;
+}
+
 .container {
     display: flex;
     justify-content: center;
@@ -28,12 +33,11 @@ body {
     flex-direction: column;
 }
 
-h1 {
-    font-family: 'Open Sans', sans-serif;
-    font-weight: 300;
-}
+/*
+ * Styles for the game end overlay
+ */
 
-.gameEnd {
+.game-end {
     visibility: hidden;
     z-index: 10;
     position: fixed;
@@ -46,11 +50,11 @@ h1 {
     text-align: center;
 }
 
-.gameEnd.fadeIn {
+.game-end.fadeIn {
     animation: fadeIn 0.5s ease-in-out forwards;
 }
 
-.gameEnd.fadeOut {
+.game-end.fadeOut {
     animation: fadeOut 0.5s ease-in-out forwards;
 }
 
@@ -66,6 +70,42 @@ h1 {
     background-color: #02ccba;
     border: 1px solid #00a6a6;
     border-radius: 15px;
+}
+
+/*
+ * Styles for the Score Panel
+ */
+
+.score-panel {
+    font-size: 2.8vmin;
+    text-align: left;
+    width: 70vmin;
+    margin-bottom: 10px;
+}
+
+.score-panel .timer,
+.score-panel .stars {
+    display: block;
+}
+
+.score-panel .stars {
+    padding: 0;
+    display: inline-block;
+    margin: 0 5px 0 0;
+}
+
+.score-panel .stars li {
+    list-style: none;
+    display: inline-block;
+}
+
+.score-panel .restart {
+    float: right;
+    cursor: pointer;
+}
+
+.score-panel .fa-repeat {
+    font-size: 4.5vmin;
 }
 
 /*
@@ -100,7 +140,7 @@ h1 {
     transform-style: preserve-3d;
 }
 
-.card-inner {
+.deck .card-inner {
     height: 100%;
     width: 100%;
     pointer-events: none;
@@ -134,7 +174,7 @@ h1 {
     animation: shake 0.2s ease 0.3s;
 }
 
-.face {
+.deck .face {
     position: absolute;
     font-size: 5vmin;
     height: 100%;
@@ -159,6 +199,10 @@ h1 {
     background: #cc2815;
     transition: background-color 0.2s ease 0.3s;
 }
+
+/*
+ * Animations
+ */
 
 @keyframes blob {
     0%, 100% {transform: scale(1, 1) rotateY(0)}
@@ -202,6 +246,7 @@ h1 {
         visibility: visible;
     }
 }
+
 @keyframes fadeOut {
     0% {
         transform: scale(1);
@@ -220,40 +265,4 @@ h1 {
         opacity: 0;
         visibility: hidden;
     }
-}
-
-/*
- * Styles for the Score Panel
- */
-
-.score-panel {
-    font-size: 2.8vmin;
-    text-align: left;
-    width: 70vmin;
-    margin-bottom: 10px;
-}
-
-.timer,
-.stars {
-    display: block;
-}
-
-.score-panel .stars {
-    padding: 0;
-    display: inline-block;
-    margin: 0 5px 0 0;
-}
-
-.score-panel .stars li {
-    list-style: none;
-    display: inline-block;
-}
-
-.score-panel .restart {
-    float: right;
-    cursor: pointer;
-}
-
-.fa-repeat {
-    font-size: 4.5vmin;
 }
