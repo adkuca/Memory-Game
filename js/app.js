@@ -277,10 +277,12 @@ document.addEventListener("DOMContentLoaded", function() {
         resetGame();
     }
 
+    /** Saves stats in an array */
     function fetchStats() {
         containerArray.scoreArray.push({moveCount: containerArray.moveCount, starsCount: containerArray.starsCount, timerStr: timerSpan.textContent});
     }
 
+    /** Sets stats */
     function stats() {
         const str = containerArray.lastScore.timerStr;
         const min = Number(str.substr(8,1));
