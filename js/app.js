@@ -166,8 +166,8 @@ document.addEventListener("DOMContentLoaded", function() {
             if (time[0] === 0 && time[1] === 30 && time[2] === 0) star3.style.visibility = "hidden";
             else if (time[0] === 1 && time[1] === 0 && time[2] === 0) star2.style.visibility = "hidden";
             else if (time[0] === 1 && time[1] === 50 && time[2] === 0) {
-                timerSpan.style.color = "red";
                 star1.style.visibility = "hidden";
+                timerSpan.style.color = "red";
             }
 
             ((endAt * 1000 + startTime) <= Date.now() && endAt) ? gameLost() : timedFunc = setTimeout(tick, interval - driftTime);
@@ -198,11 +198,11 @@ document.addEventListener("DOMContentLoaded", function() {
     function spamPenalty() {
         if (containerArray.attemptCount === 15) star3.style.visibility = "hidden";
         else if (containerArray.attemptCount === 25) star2.style.visibility = "hidden";
-        else if (containerArray.attemptCount === 35) attemptSpan.style.color = "red";
-        else if (containerArray.attemptCount === 40) {
+        else if (containerArray.attemptCount === 35) {
             star1.style.visibility = "hidden";
-            gameLost();
+            attemptSpan.style.color = "red";
         }
+        else if (containerArray.attemptCount === 40) gameLost();
     }
 
     function checkMatch() {
