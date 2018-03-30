@@ -46,6 +46,7 @@ document.addEventListener("DOMContentLoaded", function() {
     const endStats = document.getElementsByClassName('end-stats')[0];
     const proceedBtn = document.getElementsByClassName('btn-proceed')[0];
     const timerSpan = document.querySelector('.timer');
+    const attemptSpan = document.getElementsByClassName('moves')[0];
     timedFunc = undefined;
     timerOn = false;
 
@@ -88,6 +89,7 @@ document.addEventListener("DOMContentLoaded", function() {
         finalIconArr: shuffle(iconArr.concat(iconArr)),
         stepCount: 0,
         clickCount: 0,
+        attemptCount: 0,
         openCards: [],
         get openCardsLast() { return this.openCards[this.openCards.length - 1] },
         get openCardsForelast() { return this.openCards[this.openCards.length - 2] },
@@ -135,6 +137,7 @@ document.addEventListener("DOMContentLoaded", function() {
             containerArray.openCards.push(e.target);
 
             if (containerArray.stepCount === 2) {
+                attempt();
                 if (checkMatch(e)) {
                     console.log('MATCHED');
                     toggleClass(containerArray.openCardsLast, containerArray.openCardsForelast, 'match');
@@ -207,6 +210,7 @@ document.addEventListener("DOMContentLoaded", function() {
         containerArray.openCards = [];
         containerArray.clickCount = 0;
         containerArray.stepCount = 0;
+        resetMoves();
     }
 
     function removeDeck() {
@@ -218,6 +222,17 @@ document.addEventListener("DOMContentLoaded", function() {
     function resetTimerSpan() {
         timerSpan.style.color = "black";
         timerSpan.textContent = "Timer: 00:00.0";
+    }
+
+    function attempt() {
+        containerArray.attemptCount += 1;
+        attemptSpan.textContent = `Moves: ${containerArray.attemptCount}`;
+    }
+
+    function resetMoves() {
+        containerArray.attemptCount = 0;
+        attemptSpan.style.color = "black";
+        attemptSpan.textContent = "Moves: 0";
     }
 
 });
