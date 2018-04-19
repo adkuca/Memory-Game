@@ -289,8 +289,12 @@ document.addEventListener("DOMContentLoaded", function() {
         const sec = Number(str.substr(10,2));
         const starText = containerArray.starsCount === 1 ? "Star" : "Stars";
         endStats.textContent = `With ${containerArray.moveCount} Moves and ${containerArray.starsCount} ${starText}.`;
-        if (min) endTime.textContent = `Your time is ${min} minutes and ${sec} seconds.`;
-        else endTime.textContent = `Your time is ${sec} seconds.`;
+        const secText = sec === 1 ? "second" : "seconds";
+        if (min) {
+            const minText = min === 1 ? "minute" : "minutes";
+            endTime.textContent = `Your time is ${min} ${minText} and ${sec} ${secText}.`;
+        }
+        else endTime.textContent = `Your time is ${sec} ${secText}.`;
     }
 
     /**
