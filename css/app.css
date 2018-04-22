@@ -126,7 +126,7 @@ h3 {
     flex-wrap: wrap;
     justify-content: space-between;
     align-items: center;
-    margin: 0 0 3em;
+    margin: 0;
 }
 
 .deck .card {

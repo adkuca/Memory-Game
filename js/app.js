@@ -54,8 +54,8 @@ document.addEventListener("DOMContentLoaded", function() {
         }
     ];
     
-    const containerArray = {
-        finalIconArr: iconArr.concat(iconArr),
+    const cardsObj = {
+        finalIconArr: [...iconArr, ...iconArr],
         stepCount: 0,
         clickCount: 0,
         moveCount: 0,
@@ -98,33 +98,33 @@ document.addEventListener("DOMContentLoaded", function() {
     function cardLogic(e) {
         if (e.target.classList.contains('card')) {
             if (!timerOn) timer(100, 0, 120);
-            containerArray.stepCount += 1;
-            containerArray.clickCount += 1;
+            cardsObj.stepCount += 1;
+            cardsObj.clickCount += 1;
             e.target.classList.toggle('open');
-            containerArray.openCards.push(e.target);
+            cardsObj.openCards.push(e.target);
 
-            if (containerArray.stepCount === 2) {
+            if (cardsObj.stepCount === 2) {
                 attempt();
                 if (checkMatch()) {
-                    toggleClass(containerArray.openCardsLast, containerArray.openCardsForelast, 'match');
-                    if (containerArray.openCards.length === containerArray.finalIconArr.length) {
+                    toggleClass(cardsObj.openCardsLast, cardsObj.openCardsForelast, 'match');
+                    if (cardsObj.openCards.length === cardsObj.finalIconArr.length) {
                         fetchStats();
                         gameWon();
                     }
                 } else {
-                    toggleClass(containerArray.openCardsLast, containerArray.openCardsForelast, 'fail');
-                    setTimeout(closeCards, 600, containerArray.openCardsLast, containerArray.openCardsForelast);
-                    containerArray.openCards.pop();
-                    containerArray.openCards.pop();
+                    toggleClass(cardsObj.openCardsLast, cardsObj.openCardsForelast, 'fail');
+                    setTimeout(closeCards, 600, cardsObj.openCardsLast, cardsObj.openCardsForelast);
+                    cardsObj.openCards.pop();
+                    cardsObj.openCards.pop();
                 }
-                containerArray.stepCount = 0;
+                cardsObj.stepCount = 0;
             }
         }
     }
 
     /** Sets deck */
     function readyDeck() {
-        shuffle(containerArray.finalIconArr);
+        shuffle(cardsObj.finalIconArr);
         createDeck();
     }
 
@@ -135,10 +135,10 @@ document.addEventListener("DOMContentLoaded", function() {
         ul.setAttribute('class', 'deck');
         frag.appendChild(ul);
 
-        for (let x = 0, n = containerArray.finalIconArr.length; x < n; x++) {
+        for (let x = 0, n = cardsObj.finalIconArr.length; x < n; x++) {
             const li = document.createElement('li');
             li.setAttribute('class', 'card');
-            li.setAttribute('data-index', `${containerArray.finalIconArr[x].iconIndex}`);
+            li.setAttribute('data-index', `${cardsObj.finalIconArr[x].iconIndex}`);
             ul.appendChild(li);
 
             const cardInner = document.createElement('div');
@@ -146,7 +146,7 @@ document.addEventListener("DOMContentLoaded", function() {
             li.appendChild(cardInner);
 
             const face = document.createElement('div');
-            face.setAttribute('class', `face fa ${containerArray.finalIconArr[x].iconClass}`);
+            face.setAttribute('class', `face fa ${cardsObj.finalIconArr[x].iconClass}`);
             cardInner.appendChild(face);
         }
         cont.appendChild(frag);
@@ -221,17 +221,17 @@ document.addEventListener("DOMContentLoaded", function() {
 
     /** Counts moves and updates text */
     function attempt() {
-        containerArray.moveCount += 1;
-        attemptSpan.textContent = `Moves: ${containerArray.moveCount}`;
+        cardsObj.moveCount += 1;
+        attemptSpan.textContent = `Moves: ${cardsObj.moveCount}`;
         spamPenalty();
     }
 
     /** Handles star visibility */
     function spamPenalty() {
-        if (containerArray.moveCount === 15) star3.style.visibility = "hidden";
-        else if (containerArray.moveCount === 25) star2.style.visibility = "hidden";
-        else if (containerArray.moveCount === 35) attemptSpan.style.color = "red";
-        else if (containerArray.moveCount === 40) {
+        if (cardsObj.moveCount === 15) star3.style.visibility = "hidden";
+        else if (cardsObj.moveCount === 25) star2.style.visibility = "hidden";
+        else if (cardsObj.moveCount === 35) attemptSpan.style.color = "red";
+        else if (cardsObj.moveCount === 40) {
             fetchStats();
             gameLost();
         }
@@ -239,7 +239,7 @@ document.addEventListener("DOMContentLoaded", function() {
 
     /** Checks whether two last opened cards data-index matches */
     function checkMatch() {
-        return (containerArray.openCardsLast.getAttribute('data-index') === containerArray.openCardsForelast.getAttribute('data-index'));
+        return (cardsObj.openCardsLast.getAttribute('data-index') === cardsObj.openCardsForelast.getAttribute('data-index'));
     }
 
     /**
@@ -279,16 +279,16 @@ document.addEventListener("DOMContentLoaded", function() {
 
     /** Saves stats in an array */
     function fetchStats() {
-        containerArray.scoreArray.push({moveCount: containerArray.moveCount, starsCount: containerArray.starsCount, timerStr: timerSpan.textContent});
+        cardsObj.scoreArray.push({moveCount: cardsObj.moveCount, starsCount: cardsObj.starsCount, timerStr: timerSpan.textContent});
     }
 
     /** Sets stats */
     function stats() {
-        const str = containerArray.lastScore.timerStr;
+        const str = cardsObj.lastScore.timerStr;
         const min = Number(str.substr(8,1));
         const sec = Number(str.substr(10,2));
-        const starText = containerArray.starsCount === 1 ? "Star" : "Stars";
-        endStats.textContent = `With ${containerArray.moveCount} Moves and ${containerArray.starsCount} ${starText}.`;
+        const starText = cardsObj.starsCount === 1 ? "Star" : "Stars";
+        endStats.textContent = `With ${cardsObj.moveCount} Moves and ${cardsObj.starsCount} ${starText}.`;
         const secText = sec === 1 ? "second" : "seconds";
         if (min) {
             const minText = min === 1 ? "minute" : "minutes";
@@ -313,9 +313,9 @@ document.addEventListener("DOMContentLoaded", function() {
         resetStars();
         resetMoves();
         removeDeck();
-        containerArray.openCards = [];
-        containerArray.clickCount = 0;
-        containerArray.stepCount = 0;
+        cardsObj.openCards = [];
+        cardsObj.clickCount = 0;
+        cardsObj.stepCount = 0;
     }
 
     /** Stops timer function execution */
@@ -338,7 +338,7 @@ document.addEventListener("DOMContentLoaded", function() {
 
     /** Resets moves counter */
     function resetMoves() {
-        containerArray.moveCount = 0;
+        cardsObj.moveCount = 0;
         attemptSpan.style.color = "black";
         attemptSpan.textContent = "Moves: 0";
     }
